@@ -1,0 +1,489 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>React Native - Collecting rakes</title>
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/night.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+					<h1>React Native</h1>
+					<p>Collecting rakes</p>
+					<img src="./img/rakes.jpg" />
+				</section>
+				<section>
+					<h2>React Native</h2>
+					<p>Native UI components managed from JS</p>
+					<p>Cross-platform - IOS, Android, UWP, OSX</p>
+					<p>New release every 2 week</p>
+				</section>
+				<section>
+					<h3>Supported operating systems are:</h3>
+					<ul>
+						<li>Android >= 4.1 (API 16)</li>
+						<li>iOS >= 8.0</li>
+						<li>Windows 10, Windows 10 Mobile, Xbox One</li>
+						<li>OS X 10.10+</li>
+					</ul>
+				</section>
+				<section>
+					<h2>Getting stated</h2>
+					<p>Xcode for IOS and/or Android SDK</p>
+					<pre class="fragment fade-up"><code data-trim data-noescape>
+npm install -g react-native-cli
+react-native init AwesomeProject
+cd AwesomeProject
+react-native run-ios
+react-native run-android
+					</code></pre>
+				</section>
+				<section>
+					<h2>How it works</h2>
+					<p>Bridge between JavaScript and Native code</p>
+					<p>
+						2 main threads
+						<ul>
+							<li>Main thread - create and position view</li>
+							<li>JavaScript thread</li>
+						</ul>
+					</p>
+					<p>
+						Dispatch queues (more efficient on executing tasks)
+						<ul>
+							<li>Shadow queue - for layout calculations</li>
+							<li>+ one queue for every native module</li>
+						</ul>
+					</p>
+				</section>	
+				<section>
+					<h2>There are no...</h2>
+					<p class="fragment fade-up">No HTML</p>
+					<p class="fragment fade-up">No CSS</p>
+					<p class="fragment fade-up">No DOM APIs</p>
+					<p class="fragment fade-up">No Web APIs</p>
+				</section>
+				<section>
+					<h2>Polyfilled Web APIs</h2>
+					<ul>
+						<li>Geolocation API</li>
+						<li>requestAnimationFrame</li>
+						<li>XMLHttpRequest and Fetch API</li>
+					</ul>
+				</section>
+				<section>
+						<h2>No localstorage</h2>
+						<h3>Use AsyncStorage</h3>
+						<p>Simple, unencrypted, asynchronous, persistent, key-value storage system that is global to the app</p>
+						<p>
+							On IOS backed by native code that stores small values in a serialized dictionary and larger values in separate files 
+						</p>
+						<p>
+							On Android will use either RocksDB or SQLite based on what is available
+						</p>
+				</section>
+				<section>
+					<h2>WebSockets</h2>
+					<p>Supported in React Native core</p>
+					<pre><code data-trim data-noescape>
+const ws = new WebSocket('ws://host.com/path');
+ws.onmessage = (e) => {
+  console.log(e.data);
+}
+					</code></pre>
+					<p class="fragment fade-up">
+						Socket.Io requires some trickery
+					</p>
+					<pre class="fragment fade-up"><code data-trim data-noescape>
+window.navigator.userAgent = 'react-native'
+import io from 'socket.io-client/socket.io'
+const socket = io('ws://host.com/path', {
+  upgrade: false,
+  transports: ['websocket'],
+  autoConnect: true
+})
+					</code></pre>
+				</section>
+				<section>
+					<h2>Views</h2>
+					<p>JSX -> VDOM -> Native UI</p>
+					<pre><code data-trim data-noescape>
+&lt;View&gt;
+  &lt;Text style={styles.text}&gt;Hello World&lt;/Text&gt;
+&lt;/View&gt;
+					</code></pre>
+				</section>
+				<section>
+					<h2>Styles</h2>
+					<p class="fragment fade-up">Subset of CSS</p>
+					<p class="fragment fade-up">Defined as JS object</p>
+					<pre class="fragment fade-up"><code data-trim data-noescape>
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center'
+  }
+})
+					</code></pre>
+					<p class="fragment fade-up">
+						Array in style prop to merge styles
+						<pre class="fragment fade-up"><code data-trim data-noescape>
+&lt;Text style={[styles.main, {fontSize: 15}]}&gt;...&lt;/Text&gt;							
+					</code></pre>
+					</p>
+				</section>
+				<section>
+					<h2>Styling gotchas</h2>
+					<ul>
+						<li class="fragment fade-up">Use Stylesheet.create whenever possible to create performat style definitions</li>
+						<li class="fragment fade-up">Dimensions are set in point</li>
+						<li class="fragment fade-up">Stylesheet.hairlineWidth for 1px in points</li>
+						<li class="fragment fade-up">Code your styles - use variables and realtime size calculations</li>
+						<li class="fragment fade-up">Extract common styles such us borderRadius, color, backgroundColor, etc</li>
+					</ul>
+				</section>
+				<section>
+					<h2>Styling pains</h2>
+					<ul>
+							<li class="fragment fade-up">No cascading for font styles - only defined directly on Text component</li>
+							<li class="fragment fade-up">There is no background images in styles - use Image as container</li>
+							<li class="fragment fade-up">There is <strong>no cross-platform shadows</strong> - shadow* on IOS and elevation on Android</li>
+							<li class="fragment fade-up">The overflow style is always hidden on android, and doesn't respect borderRadius</li>
+							<li class="fragment fade-up">
+								<img src="./img/borderradius-problem.png"
+							</li>
+					</ul>
+				</section>
+				<section>
+					<h2>Navigation</h2>
+					<p class="fragment fade-up">No URL</p>
+					<p class="fragment fade-up">Navigator component</p>
+					<p class="fragment fade-up">BUT it is stateful component. So it can become tricky to coordinate navigation transitions between many screens</p>
+					<p class="fragment fade-up">NavigationExperimental</p>
+					<p class="fragment fade-up">react-native-router-flux based on NavigationExperimental</p>
+				</section>
+				<section>
+					<h2>Images</h2>
+					<h3>Static Image Resources</h3>
+					<pre><code data-trim data-noescape>
+&lt;Image source={require('./my-icon.png')} /&gt;
+					</code></pre>
+					<p class="fragment fade-up">Supports @2x, @3x, etc. suffixes in the file name to provide images for different screen densities</p>
+					<p class="fragment fade-up">The image name in require has to be known statically.</p>
+					<pre class="fragment fade-up"><code data-trim data-noescape>
+// BAD
+const icon = this.props.active ? 'my-icon-active' : 'my-icon-inactive'
+&lt;Image source={require('./' + icon + '.png')} /&gt;
+
+// GOOD
+const icon = this.props.active ? 
+	require('./my-icon-active.png') : require('./my-icon-inactive.png')
+&lt;Image source={icon} /&gt;
+					</code></pre>
+				</section>
+				<section>
+					<h2>Images</h2>
+					<h3>Network Images</h3>
+					<p>you will need to manually specify the dimensions of your image</p>
+					<pre><code data-trim data-noescape>
+// GOOD
+&lt;Image source={{uri: 'https://facebook.github.io/react/img/logo_og.png'}}
+       style={{width: 400, height: 400}} /&gt;
+
+// BAD
+&lt;Image source={{uri: 'https://facebook.github.io/react/img/logo_og.png'}} /&gt;
+						</code></pre>
+				</section>
+				<section>
+					<h2>Images</h2>
+					<h3>Images from phone</h3>
+					<pre><code data-trim data-noescape>
+&lt;Image source={{uri: path, isStatic: true} /&gt;
+					</code></pre>
+					<p>On Android (but not on IOS) path should start with 'file://'</p>
+				</section>
+				<section>
+					<h2>NetInfo</h2>
+					<p>exposes info about online/offline status</p>
+					<pre><code data-trim data-noescape>
+NetInfo.isConnected.fetch().then(isConnected => {
+  console.log('First, is ' + (isConnected ? 'online' : 'offline'));
+});
+				</code></pre>
+				<p class="fragment fade-up">BUT it does not work on simulator unless you add a listener</p>
+				<pre class="fragment fade-up"><code data-trim data-noescape>
+NetInfo.isConnected.addEventListener('change', () => {})
+				</code></pre>
+				</section>
+				<section>
+					<div style="width: 60%; float: left">
+						<h2>Debug menu</h2>
+						<p>Just shake it</p>
+						<p>Disabled in release (production) builds</p>
+					</div>
+					<img src="./img/debugMenu.png" style="width: 30%; float:right"/>
+				</section>
+				<section>
+					<div style="width: 60%; float: left">
+						<h2>Inspector</h2>
+					</div>
+					<img src="./img/inspector.png" style="width: 30%; float:right"/>
+				</section>
+				<section>
+					<div style="width: 60%; float: left">
+						<h2>Performance monitor</h2>
+					</div>
+					<img src="./img/perfMonitor.png" style="width: 30%; float:right"/>
+				</section>
+				<section>
+					<h2>Remote JS debug in Chrome</h2>
+					<p>Select "Debug JS Remotely" from the Developer Menu</p>
+					<p class="fragment fade-up">React tab is currently not working</p>
+					<p class="fragment fade-up">
+						On IOS device - change localhost to your IP address in RCTWebSocketExecutor.m<br />
+						On Android 5+ - should work out of box (adb reverse tcp:8081 tcp:8081)<br/>
+						On Android 4.x - "Debug server host for device" in dev settings should be set to you IP address
+					</p>
+				</section>
+				<section>
+					<h2>Ignite</h2>
+					<p>The unfair starting CLI, Generator, and more for React Native</p>
+					<pre class="fragment fade-up"><code>npm install -g react-native-ignite</code></pre>
+					<pre class="fragment fade-up"><code>ignite new MyApplication</code></pre>
+					<ul>
+						<li class="fragment fade-up">Redux + Redux sagas + Redux persistence</li>
+						<li class="fragment fade-up">Tests and code coverage configured (Ava test runner)</li>
+						<li class="fragment fade-up">react-native-router-flux as Router</li>
+						<li class="fragment fade-up">I18n support</li>
+					</ul>
+					<p class="fragment fade-up">
+						Built-In Generators for
+						<ul class="fragment fade-up">
+							<li>components</li>
+							<li>containers</li>
+							<li>screens</li>
+							<li>reducers and sagas</li>
+						</ul>
+					</p>
+				</section>
+				<section>
+					<h1>Components</h1>
+					<p>There are already lots of different components</p>
+					<pre class="fragment fade-up"><code data-trim data-noescape>
+npm i --save react-native-component
+react-native link react-native-component
+					</code></pre>
+					<p class="fragment fade-up">Plugin initialisation changed heavily in 0.29</p>
+				</section>
+				<section>
+					<h2>react-native-router-flux</h2>
+					<p>Define scene transitions in one central location</p>
+					<pre class="fragment fade-up"><code data-trim data-noescape>
+&lt;Router&gt;
+	&lt;Scene key="root"&gt;
+		&lt;Scene key="login" component={Login} title="Login"/&gt;
+		&lt;Scene key="home" initial component={Home}/&gt;
+	&lt;/Scene&gt;
+&lt;/Router&gt;
+				</code></pre>
+					<p class="fragment fade-up">Call transitions anywhere in your code with a simple syntax</p>
+					<pre class="fragment fade-up"><code data-trim data-noescape>
+import {Actions} from 'react-native-router-flux'
+Actions.login({username, password})
+Actions.home()
+Actions.pop() // Back in nav
+					</code></pre>
+					<p class="fragment fade-up">All params will be part of this.props for given Scene component</p>
+					<p class="fragment fade-up">Highly Customizable Navigation Bar - Show/hide the navbar depending on Scene</p>
+					<p class="fragment fade-up">Tab Bar, Modal and Drawer (side menu) Support</p>
+				</section>
+				<section>
+					<h2>react-native-i18n</h2>
+					<p>Integrates I18n.js with React Native. Uses the device's locale as default.</p>
+					<pre class="fragment fade-up"><code data-trim data-noescape>
+					import I18n from 'react-native-i18n'
+
+class Demo extends React.Component {
+  render () {
+    return (
+      &lt;Text&gt;{I18n.t('greeting')}&lt;/Text&gt;
+    )
+  }
+}		
+				</code></pre>
+				</section>
+				<section>
+					<h2>react-native-vector-icons</h2>
+					<p>Over 3000 out of the box - FontAwesome, Foundation, Ionicons, MaterialIcons and others</p>
+					<pre class="fragment fade-up"><code data-trim data-noescape>
+import Icon from 'react-native-vector-icons/FontAwesome'
+const myIcon = (&lt;Icon name="rocket" size={30} color="#900" /&gt;)
+					</code></pre>
+					<p class="fragment fade-up">
+						Most Text styling works<br/> 
+						<img src="https://cloud.githubusercontent.com/assets/378279/7667570/33817554-fc0d-11e4-9ad7-4eb60139cfb7.png" />
+						<img src="https://cloud.githubusercontent.com/assets/378279/7667569/3010dd7e-fc0d-11e4-9696-cb721fe8e98d.png" /> 
+					</p>
+					<p class="fragment fade-up">
+						Icon.Button Component creating buttons with an icon on the left side.
+					</p>
+					<pre class="fragment fade-up"><code data-trim data-noescape>
+// Allows to convert icon to PNG image
+Icon.getImageSource('user', 20, 'red')
+					</code></pre>
+					<p class="fragment fade-up">
+						Custom icon fonts support (Fontello and IconMoon too)
+					</p>
+				</section>
+				<section>
+					<h2>react-native-svg</h2>
+					<p>SVG interface to react native on both iOS and Android</p>
+					<p class="fragment fade-up">Supports most of SVG features (for now Pattern and Mask are missing)</p>
+					<p class="fragment fade-up">Animations can be tricky to implement</p>
+					<p class="fragment fade-up">
+						However Path morphing is already avaliable - <a href="http://browniefed.com/blog/react-native-morphing-svg-paths-with-react-art/">example</a>
+						<img src="http://i.imgur.com/KxNBQsb.gif" />
+					</p>
+				</section>
+				<section>
+					<h2>react-native-camera</h2>
+					<section>
+						<p class="fragment fade-up">Insert camera view into application</p>
+						<p class="fragment fade-up">Take pictures or video</p>
+						<p class="fragment fade-up">Scan barcodes (IOS only according to docs but works on android too)</p>
+					</section>	
+					<section>
+						<p>Subviews: camera view as a background with some components inside it</p>
+						<p class="fragment fade-up">BUT it caches child components and you'll have problem with several views</p>
+						<p class="fragment fade-up">Solution: move all childs components to separate view and place it absolutelly over camera view</p>
+						<p class="fragment fade-up">BUT without childs camera view won't render for second time</p>
+						<p class="fragment fade-up">Solution: add empty View as a child</p>
+					</section>
+					<section>
+						<p>Additional problems on Android - app craches if second view is created before first one is destroyed</p>
+						<p class="fragment fade-up">https://github.com/skostyrko/react-native-camera#android-scanner</p>
+					</section>
+				</section>
+				<section>
+					<h2>react-native-collapsible</h2>
+					<p class="fragment fade-up">Animated collapsible component</p>
+					<p class="fragment fade-up">Also provides Accordion component</p>
+					<p class="fragment fade-up">BUT does not work in React Native >= 0.35 because of bug</p>
+					<p class="fragment fade-up">Temporary solution till bug will be fixed - install git://github.com/relayfoods/react-native-collapsible.git#collapsible-not-expanding-temp-fix</p>
+				</section>
+				<section>
+					<h2>react-native-config</h2>
+					<p>Config variables for React Native apps</p>
+					<p class="fragment fade-up">Declare config variables in .env file</p>
+					<pre class="fragment fade-up"><code data-trim data-noescape>
+API_URL=https://myapi.com
+GOOGLE_MAPS_API_KEY=abcdefgh
+					</code></pre>
+					<p class="fragment fade-up">Then access from your app</p>
+<pre class="fragment fade-up"><code data-trim data-noescape>
+import Config from 'react-native-config'
+
+Config.API_URL  // 'https://myapi.com'
+Config.GOOGLE_MAPS_API_KEY  // 'abcdefgh'
+</code></pre>
+					<p class="fragment fade-up">Config variables avaliable in Java and Obj-C</p>
+					<p class="fragment fade-up">Needs app rebuild after any changes in config</p>
+				</section>
+				<section>
+					<div style="float: left; width: 60%">
+						<h2>react-native-keyboard-aware-scroll-view</h2>
+						<p class="fragment fade-up">KeyboardAvoidingView in React Native core</p>
+						<p class="fragment fade-up">BUT currently a bit buggy - problems with blur</p>
+						<p class="fragment fade-up">Handles keyboard appearance and automatically scrolls to focused TextInput.</p>
+					</div>
+					<div style="float: right; width: 30%">
+						<img src="https://raw.githubusercontent.com/wiki/APSL/react-native-keyboard-aware-scroll-view/kasv.gif" />
+					</div>
+				</section>
+				<section>
+					<h2>reduxsauce</h2>
+					<h3>Less Redux boilerplate</h3>
+					<p class="fragment fade-up">createActions</p>
+					<pre class="fragment fade-up"><code data-trim data-noescape>
+import { createActions } from 'reduxsauce'
+
+const { Types, Actions } = createActions({
+  loginRequest: ['username', 'password'],
+  loginSuccess: ['username'],
+  loginFailure: ['error'],
+  logout: null,
+  custom: (a, b) => ({ type: 'CUSTOM', total: a + b })
+})
+
+Actions.loginRequest('steve', 'secret')
+					</code></pre>
+					<p class="fragment fade-up">createReducer</p>
+					<pre class="fragment fade-up"><code data-trim data-noescape>
+import { createReducer } from 'reduxsauce'
+
+export default createReducer(INITIAL_STATE, {
+  [Types.LOGIN_SUCCESS]: success,
+  [Types.LOGIN_FAILURE]: failure
+})
+</code></pre>
+				</section>
+				<section>
+					<h2>Usfull links</h2>
+					<ul>
+						<li>
+							<a href="https://github.com/jondot/awesome-react-native">Awesome React Native</a>
+						</li>
+						<li>
+							<a href="https://tadeuzagallo.com/blog/react-native-bridge/">Bridging in React Native</a>
+						</li>
+						<li>
+							<a href="https://github.com/vhpoet/react-native-styling-cheat-sheet">Styling cheat sheet</a>
+						</li>
+						<li>	
+							<a href="https://js.coach/react-native">js.coach/react-native</a>
+						</li>
+					</ul>
+				</section>
+				<section>
+					<img src="http://img09.deviantart.net/0248/i/2013/295/d/8/that_s_all_folks__by_surrimugge-d6rfav1.png" />
+					Questions?
+				</section>
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				history: true,
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
