@@ -7,7 +7,7 @@
 		<title>React Native - Collecting rakes</title>
 
 		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/night.css">
+		<link rel="stylesheet" href="css/theme/league.css">
 
 		<!-- Theme used for syntax highlighting of code -->
 		<link rel="stylesheet" href="lib/css/zenburn.css">
@@ -72,7 +72,7 @@ react-native run-android
 							<li>+ one queue for every native module</li>
 						</ul>
 					</p>
-				</section>	
+				</section>
 				<section>
 					<h2>There are no...</h2>
 					<p class="fragment fade-up">No HTML</p>
@@ -93,7 +93,7 @@ react-native run-android
 						<h3>Use AsyncStorage</h3>
 						<p>Simple, unencrypted, asynchronous, persistent, key-value storage system that is global to the app</p>
 						<p>
-							On IOS backed by native code that stores small values in a serialized dictionary and larger values in separate files 
+							On IOS backed by native code that stores small values in a serialized dictionary and larger values in separate files
 						</p>
 						<p>
 							On Android will use either RocksDB or SQLite based on what is available
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
 					<p class="fragment fade-up">
 						Array in style prop to merge styles
 						<pre class="fragment fade-up"><code data-trim data-noescape>
-&lt;Text style={[styles.main, {fontSize: 15}]}&gt;...&lt;/Text&gt;							
+&lt;Text style={[styles.main, {fontSize: 15}]}&gt;...&lt;/Text&gt;
 					</code></pre>
 					</p>
 				</section>
@@ -193,7 +193,7 @@ const icon = this.props.active ? 'my-icon-active' : 'my-icon-inactive'
 &lt;Image source={require('./' + icon + '.png')} /&gt;
 
 // GOOD
-const icon = this.props.active ? 
+const icon = this.props.active ?
 	require('./my-icon-active.png') : require('./my-icon-inactive.png')
 &lt;Image source={icon} /&gt;
 					</code></pre>
@@ -326,7 +326,7 @@ class Demo extends React.Component {
       &lt;Text&gt;{I18n.t('greeting')}&lt;/Text&gt;
     )
   }
-}		
+}
 				</code></pre>
 				</section>
 				<section>
@@ -337,9 +337,9 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 const myIcon = (&lt;Icon name="rocket" size={30} color="#900" /&gt;)
 					</code></pre>
 					<p class="fragment fade-up">
-						Most Text styling works<br/> 
+						Most Text styling works<br/>
 						<img src="https://cloud.githubusercontent.com/assets/378279/7667570/33817554-fc0d-11e4-9ad7-4eb60139cfb7.png" />
-						<img src="https://cloud.githubusercontent.com/assets/378279/7667569/3010dd7e-fc0d-11e4-9696-cb721fe8e98d.png" /> 
+						<img src="https://cloud.githubusercontent.com/assets/378279/7667569/3010dd7e-fc0d-11e4-9696-cb721fe8e98d.png" />
 					</p>
 					<p class="fragment fade-up">
 						Icon.Button Component creating buttons with an icon on the left side.
@@ -368,7 +368,7 @@ Icon.getImageSource('user', 20, 'red')
 						<p class="fragment fade-up">Insert camera view into application</p>
 						<p class="fragment fade-up">Take pictures or video</p>
 						<p class="fragment fade-up">Scan barcodes (IOS only according to docs but works on android too)</p>
-					</section>	
+					</section>
 					<section>
 						<p>Subviews: camera view as a background with some components inside it</p>
 						<p class="fragment fade-up">BUT it caches child components and you'll have problem with several views</p>
@@ -456,7 +456,7 @@ export default createReducer(INITIAL_STATE, {
 						<li>
 							<a href="https://github.com/vhpoet/react-native-styling-cheat-sheet">Styling cheat sheet</a>
 						</li>
-						<li>	
+						<li>
 							<a href="https://js.coach/react-native">js.coach/react-native</a>
 						</li>
 					</ul>
