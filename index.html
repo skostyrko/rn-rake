@@ -33,7 +33,7 @@
 					<h2>React Native</h2>
 					<p>Native UI components managed from JS</p>
 					<p>Cross-platform - IOS, Android, UWP, OSX</p>
-					<p>New release every 2 week</p>
+					<p>New release every <span style="text-decoration: line-through">2 week</span> <span>month</span></p>
 				</section>
 				<section>
 					<h3>Supported operating systems are:</h3>
@@ -49,7 +49,11 @@
 					<p>Xcode for IOS and/or Android SDK</p>
 					<pre class="fragment fade-up"><code data-trim data-noescape>
 npm install -g react-native-cli
+					</code></pre>
+					<pre class="fragment fade-up"><code data-trim data-noescape>
 react-native init AwesomeProject
+					</code></pre>
+					<pre class="fragment fade-up"><code data-trim data-noescape>
 cd AwesomeProject
 react-native run-ios
 react-native run-android
@@ -165,9 +169,9 @@ const styles = StyleSheet.create({
 							<li class="fragment fade-up">No cascading for font styles - only defined directly on Text component</li>
 							<li class="fragment fade-up">There is no background images in styles - use Image as container</li>
 							<li class="fragment fade-up">There is <strong>no cross-platform shadows</strong> - shadow* on IOS and elevation on Android</li>
-							<li class="fragment fade-up">The overflow style is always hidden on android, and doesn't respect borderRadius</li>
 							<li class="fragment fade-up">
-								<img src="./img/borderradius-problem.png"
+								The overflow style is always hidden on android, and doesn't respect borderRadius<br/>
+								<img src="./img/borderradius-problem.png" />
 							</li>
 					</ul>
 				</section>
@@ -215,7 +219,7 @@ const icon = this.props.active ?
 					<h2>Images</h2>
 					<h3>Images from phone</h3>
 					<pre><code data-trim data-noescape>
-&lt;Image source={{uri: path, isStatic: true} /&gt;
+&lt;Image source={{uri: path, isStatic: true}} /&gt;
 					</code></pre>
 					<p>On Android (but not on IOS) path should start with 'file://'</p>
 				</section>
@@ -257,8 +261,7 @@ NetInfo.isConnected.addEventListener('change', () => {})
 					<p>Select "Debug JS Remotely" from the Developer Menu</p>
 					<p class="fragment fade-up">React tab is currently not working</p>
 					<p class="fragment fade-up">
-						On IOS device - change localhost to your IP address in RCTWebSocketExecutor.m<br />
-						On Android 5+ - should work out of box (adb reverse tcp:8081 tcp:8081)<br/>
+						On IOS and Android 5+ - should work out of box<br/>
 						On Android 4.x - "Debug server host for device" in dev settings should be set to you IP address
 					</p>
 				</section>
@@ -277,8 +280,7 @@ NetInfo.isConnected.addEventListener('change', () => {})
 						Built-In Generators for
 						<ul class="fragment fade-up">
 							<li>components</li>
-							<li>containers</li>
-							<li>screens</li>
+							<li>containers and screens</li>
 							<li>reducers and sagas</li>
 						</ul>
 					</p>
@@ -299,7 +301,6 @@ react-native link react-native-component
 &lt;Router&gt;
 	&lt;Scene key="root"&gt;
 		&lt;Scene key="login" component={Login} title="Login"/&gt;
-		&lt;Scene key="home" initial component={Home}/&gt;
 	&lt;/Scene&gt;
 &lt;/Router&gt;
 				</code></pre>
@@ -307,10 +308,9 @@ react-native link react-native-component
 					<pre class="fragment fade-up"><code data-trim data-noescape>
 import {Actions} from 'react-native-router-flux'
 Actions.login({username, password})
-Actions.home()
 Actions.pop() // Back in nav
 					</code></pre>
-					<p class="fragment fade-up">All params will be part of this.props for given Scene component</p>
+					<p class="fragment fade-up">All params will be part of this.props for given component</p>
 					<p class="fragment fade-up">Highly Customizable Navigation Bar - Show/hide the navbar depending on Scene</p>
 					<p class="fragment fade-up">Tab Bar, Modal and Drawer (side menu) Support</p>
 				</section>
@@ -419,6 +419,7 @@ Config.GOOGLE_MAPS_API_KEY  // 'abcdefgh'
 				</section>
 				<section>
 					<h2>reduxsauce</h2>
+					<section>
 					<h3>Less Redux boilerplate</h3>
 					<p class="fragment fade-up">createActions</p>
 					<pre class="fragment fade-up"><code data-trim data-noescape>
@@ -434,8 +435,11 @@ const { Types, Actions } = createActions({
 
 Actions.loginRequest('steve', 'secret')
 					</code></pre>
-					<p class="fragment fade-up">createReducer</p>
-					<pre class="fragment fade-up"><code data-trim data-noescape>
+
+					</section>
+					<section>
+					<p>createReducer</p>
+					<pre><code data-trim data-noescape>
 import { createReducer } from 'reduxsauce'
 
 export default createReducer(INITIAL_STATE, {
@@ -443,6 +447,7 @@ export default createReducer(INITIAL_STATE, {
   [Types.LOGIN_FAILURE]: failure
 })
 </code></pre>
+					</section>
 				</section>
 				<section>
 					<h2>Usfull links</h2>
